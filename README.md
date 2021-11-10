@@ -1,2 +1,2 @@
 # js-triplestore
-JavaScript triplestore library with a basic, static html front end
+A JavaScript library that manipulates RDF-like triples from a basic, static HTML front end.
