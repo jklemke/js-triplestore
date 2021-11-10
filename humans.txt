@@ -1,0 +1,16 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    developer: Joe Klemke
+
+# THANKS
+
+    metaphysician: Victor Badinage
+
+# TECHNOLOGY COLOPHON
+
+    CSS3, HTML5
+    Boilerplate, Modernizr, Normalize.css
+    RDF, Triple, Graph Theory

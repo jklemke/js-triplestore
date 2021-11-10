@@ -1,0 +1,37 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"	>
+	<head>
+		<title>JavaScript Object Creation</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	</head>
+	<body id="body">
+		<h1>Triple Creation</h1>
+		<input type="submit" value="Create Triples" onclick="handleClick();"/>
+		<script type="text/js" src="js/grox-triple.js"></script>
+		<script type="text/js">
+		function handleClick()
+		{
+			new grox.Resource('rdf','type','isA');
+			var bob = new grox.Resource('','Bob');
+			var father = new grox.Resource('grox','Father');
+			var triple1 = new grox.Triple(':bob','isA',father);
+
+			var hasChild = new grox.Resource('hasChild');
+			var tina = new grox.Resource('Tina');
+
+			//bob.display();
+			//hasChild.display();
+			//var triple1 = new grox.Triple(bob,hasChild,"Timmy",'hasOffspring');
+			var triple1 = new grox.Triple(bob,hasChild,tina,'hasOffspring');
+			//triple1.display();
+			alert(bob.hasOffspring);
+			//alert((bob.getTriplesWithMeAsSubject())[0].getObject());
+			var tempTriple = (hasChild.getTriplesWithMeAsPredicate())[0];
+			tempTriple.display();
+
+			// this throws up an undefined message.  Why?
+			//alert(((resource2.getTriplesWithMeAsPredicate())[0]).display());
+		}
+	  	</script>
+	</body>
+</html>

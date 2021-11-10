@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html class="no-js" lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Grox Triple Store Test</title>
+		<meta name="description" content="test page for grox-triple.js">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="og:url" content="https://grox.info/">
+		<meta name="og:title" content="grox.info">
+		<meta name="og:type" content="website">
+		<meta name="og:description" content="test page for grox-triple.js">
+		<meta name="og:image" content="https://grox.info/img/Grox3.gif">
+		<link rel="manifest" href="site.webmanifest">
+		<link rel="apple-touch-icon" href="icon.png">
+		<link rel="stylesheet" href="/css/lib/normalize.css">
+		<link rel="stylesheet" href="/css/lib/boilerplate.css">
+		<link rel="stylesheet" href="/css/prj/core.css" type="text/css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sumana">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Palanquin Dark">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Otomanopee One">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source Code Pro">
+		<link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/go-mono" type="text/css"/>
+		<link rel="author" href="humans.txt" />
+		<meta name="theme-color" content="#fafafa">  
+	</head>
+	<body id="body">
+		<header>
+			<h1>grox.info model theory glossary</h1>
+			<nav>
+				<ul class="navlist">
+					<li><a href="/">Home</a></li>
+					<li><a href="#">nav 2</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main>
+			<p>basic test page for grox-triple.js</p>
+			<section>
+				<h1>Triple Store Test</h1>
+				<input type="submit" value="Create Resources" onclick="handleClick();"/>
+			</section>
+		</main>
+		<aside>
+			<header>
+				<h1>Aside</h1>
+				<nav>
+					<ul class="navlist">
+						<li><a href="#">Link1</a></li>
+						<li><a href="#">Link2</a></li>
+					</ul>
+				</nav>
+			</header>
+			<ul class="asidelist">
+				<li>Aside item</li>
+				<li>Aside item</li>
+				<li>Aside item</li>
+			</ul>	
+		</aside>
+		<footer>
+			<small>Copyright &copy; <time datetime="2014">2021</time> grox LLC</small>
+		</footer>
+		<script src="js/prj/grox-triple.js"></script>
+		<script src="js/prj/grox-resourcestore.js"></script>
+		<script>
+			function handleClick()
+			{
+				grox.resourceStore.getResource('rdf:type').display();
+				var s = grox.resourceStore.addResource(':Sam');
+				var s = grox.resourceStore.addResource(':Sam');
+				s.display();
+				var w = new grox.Resource('grox:Wally','Wallace');
+				w.display();
+				var t = grox.tripleStore.addTriple(':Bob','rdf:type',':Father');
+				t.display();
+				var b = grox.resourceStore.getResource(':Bob');
+				if (b) {b.display()}
+				var b2 = grox.resourceStore.getResource(b);
+				if (b2) {b2.display()}
+				var f = grox.resourceStore.getResource(':Father');
+				if (f) {f.display()}
+				var z = grox.tripleStore.addTriple(':Smurf','skos:related',':Munchkin');
+				z.display();
+				var j = grox.resourceStore.addResource(':Jimmy','Jimmy');
+				j.display();
+				var k = grox.tripleStore.addTriple(j,'rdf:type',':Father');
+				k.display();
+				var l = grox.tripleStore.addTriple(w,'rdf:type',':Father');
+				l.display();
+			}
+	  	</script>
+	</body>
+</html>

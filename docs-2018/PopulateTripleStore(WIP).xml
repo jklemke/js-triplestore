@@ -1,0 +1,27 @@
+<Datasource hashcode="" string="" version="">
+	<Namespace>
+		<Hashcode></Hashcode>
+		<String></String>
+		<Version></Version>
+		<Prefix></Prefix>
+	</Namespace>
+	<Identifier>
+		<Hashcode></Hashcode>
+		<String></String>	
+		<PrefLabel></PrefLabel>
+		<NamespaceHashcode></NamespaceHashcode>		
+	</Identifier>
+	<Expression>
+		<Hashcode></Hashcode>
+		<String></String>	
+		<Category></Category>
+	</Expression>
+	<Triple>
+		<Hashcode></Hashcode>
+		<SubjectHashcode></SubjectHashcode>
+		<PredicateHashcode></PredicateHashcode>
+		<ObjectHashcode></ObjectHashcode>
+		<PredicateLabelForSubject></PredicateLabelForSubject>
+		<PredicateLabelForObject></PredicateLabelForObject>
+	</Triple>
+</Datasource>
