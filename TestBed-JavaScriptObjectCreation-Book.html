@@ -1,0 +1,39 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"	>
+	<head>
+		<title>JavaScript Object Creation</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	</head>
+	<body id="body">
+		<h1>Book Creation</h1>
+		<input type="submit" value="Create Book" onclick="handleClick();"/>
+		<script src="js/prj/grox-book-example.js"></script>
+		<script>
+		function handleClick() 
+		{
+			var book1 = new grox.Book('1234567890', 'Pro JavaScript Design Patterns', 'Dustin Diaz');
+			var book2 = new grox.Book('0987654321', 'The Hobbit', 'J. R. R. Tolkien');	
+			book1.display();
+			book2.display();
+			book1.setAuthor('Wilford Brimley');
+			book2.color = 'blue';
+			book1.display();
+			book2.display();
+			// test error if isbn is not a string
+			//var invalidIsbn = 778899;
+			//var book3 = new grox.Book(invalidIsbn, 'jQuery Cookbook', 'jQuery Community Experts');	
+			var book3 = new grox.Book('9876543210', 'jQuery Cookbook', 'jQuery Community Experts');	
+			book3.display();
+			var book4 = new grox.Book('8765432109', 'Web 2.0 Architectures', 'James Governor, Dion Hinchcliffe, Duane Nickull');	
+			book4.display();
+			var book5 = new grox.Book('7654321098', 'Programming the Semantic Web', 'Toby Segaran, Colin Evans, Jamie Taylor');	
+			book5.display();
+			//test error if more than 5 books created
+			//var book6 = new grox.Book('6543210987', 'Patterns of Enterprise Application Architecture', 'Martin Fowler');	
+			//book6.display();
+			//grox.Book.prototype.spud = 'potato';
+			//alert(book5.spud);
+		}
+	  	</script>
+	</body>
+</html>

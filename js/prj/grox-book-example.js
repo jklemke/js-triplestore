@@ -2,7 +2,7 @@
 // Distributed under GNU LESSER GENERAL PUBLIC LICENSE, http://www.gnu.org/licenses/lgpl.txt
 
 // top level namespace to avoid clutter
-let grox = grox || {};
+var grox = grox || {};
 
 // this is a reference to a function, so can be used with "new"
 grox.Book = 

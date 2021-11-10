@@ -1,4 +1,4 @@
-// Copyright 2021,  Joe Klemke
+// Copyright 2021,  Joe Klemke, Grox LLC
 // Distributed under GNU LESSER GENERAL PUBLIC LICENSE, http://www.gnu.org/licenses/lgpl.txt
 
 var grox = grox || {};
