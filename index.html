@@ -60,34 +60,6 @@
 			<small>Copyright &copy; <time datetime="2014">2021</time> grox LLC</small>
 		</footer>
 		<script src="js/prj/grox-triple.js"></script>
-		<script src="js/prj/add-namespaces.js"></script>
-		<script>
-			function handleClick()
-			{
-				let r = grox.resourceStore.getResource('rdf:type');
-				r.display();
-				var s = grox.resourceStore.addResource(':Sam');
-				var s = grox.resourceStore.addResource(':Sam');
-				s.display();
-				var w = grox.resourceStore.addResource('grox:Wally','Wallace');
-				w.display();
-				var t = grox.resourceStore.addTriple(':Bob','rdf:type',':Father');
-				t.display();
-				var b = grox.resourceStore.getResource(':Bob');
-				if (b) {b.display()}
-				var b2 = grox.resourceStore.getResource(b);
-				if (b2) {b2.display()}
-				var f = grox.resourceStore.getResource(':Father');
-				if (f) {f.display()}
-				var z = grox.resourceStore.addTriple(':Smurf','skos:related',':Munchkin');
-				z.display();
-				var j = grox.resourceStore.addResource(':Jimmy','Jimmy');
-				j.display();
-				var k = grox.resourceStore.addTriple(j,'rdf:type',':Father');
-				k.display();
-				var l = grox.resourceStore.addTriple(w,'rdf:type',f);
-				l.display();
-			}
-	  	</script>
+		<script src="js/prj/test-resourceStore.js"></script>
 	</body>
 </html>
