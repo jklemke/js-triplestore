@@ -64,11 +64,12 @@
 		<script>
 			function handleClick()
 			{
-				grox.resourceStore.getResource('rdf:type').display();
+				let r = grox.resourceStore.getResource('rdf:type');
+				r.display();
 				var s = grox.resourceStore.addResource(':Sam');
 				var s = grox.resourceStore.addResource(':Sam');
 				s.display();
-				var w = new grox.Resource('grox:Wally','Wallace');
+				var w = grox.resourceStore.addResource('grox:Wally','Wallace');
 				w.display();
 				var t = grox.tripleStore.addTriple(':Bob','rdf:type',':Father');
 				t.display();
