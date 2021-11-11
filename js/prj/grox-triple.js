@@ -3,259 +3,29 @@
 
 var grox = grox || {};
 
-/*grox.Resource = 
-(
-	function() 
-	{
-		return function(QName,prefLabel)
-		{
-			let _QName;
-			let _prefLabel;
-			let _triplesWithThisAsSubject = [];
-			let _triplesWithThisAsPredicate = [];
-			let _triplesWithThisAsObject = [];
-
-			this.notifyOfParticipationAsSubject = function(triple) 
-			{
-				_triplesWithThisAsSubject.push(triple);
-				if (triple.getPredicateLabel() != undefined)
-				{
-					this[triple.getPredicateLabel()] = triple.getObject();
-				}
-			};
-
-			this.notifyOfParticipationAsPredicate = function(triple) 
-			{
-				_triplesWithThisAsPredicate.push(triple);
-			};
-
-			this.notifyOfParticipationAsObject = function(triple) 
-			{
-				_triplesWithThisAsObject.push(triple);
-			};
-
-			this.getQName = function() 
-			{
-				return _QName;
-			};
-
-			this.getPrefLabel = function() 
-			{
-				return _prefLabel;
-			};
-
-			this.getTriplesWithThisAsSubject = function() 
-			{
-				return _triplesWithThisAsSubject;
-			};
-
-			this.getTriplesWithThisAsPredicate = function() 
-			{
-				return _triplesWithThisAsPredicate;
-			};
-			
-			this.getTriplesWithThisAsObject = function() 
-			{
-				return _triplesWithThisAsObject;
-			};
-
-			// constructor code
-			if (!QName) {throw new Error("Invalid QName for new Resource, " + QName + ".");}
-			if (typeof QName != "string") {throw new Error("When adding a resource, QName must be a string.");}
-			if (QName.indexOf(":") < 0) {throw new Error("When adding a resource, QName must have a namespace prefix or use ':' in first position to indicate default namespace.");}
-			if (QName.indexOf(":") != QName.lastIndexOf(":"))  {throw new Error("When adding a resource, only one colon is allowed in QName string.");} 
-			if (QName.indexOf(":") == QName.length - 1)  {throw new Error("When adding a resource, at least one additional character must follow the colon in QName string.");} 				
-			
-			if (!prefLabel) {
-				prefLabel = QName.split(":")[1];
-			}
-
-			_QName = QName;
-			_prefLabel = prefLabel;
-		}
-	}
-)();
-
-grox.Resource.prototype = 
-{
-	display: function() 
-	{
-		console.log("Resource = " + this.getQName());
-	}
-};
-
-grox.Resource.isResource = function(value)
-{
-	if(value == undefined || typeof value != "object") 
-	{
-		return false;
-	} 
-	else if(value.getQName == undefined || value.notifyOfParticipationAsSubject == undefined || value.notifyOfParticipationAsPredicate == undefined || value.notifyOfParticipationAsObject == undefined ) 
-	{
-		return false;
-	}
-	return true;
-}
-
-//---------------------------------------
-grox.Triple = 
-(
-	function() 
-	{
-		return function(subject,predicate,object,altPredicateLabel) 
-		{
-			let _subject;
-			let _predicate;
-			let _object;
-			let _predicateLabel;
-
-			this.getSubject = function() 
-			{
-				return _subject;
-			};
-
-			this.getPredicate = function() 
-			{
-				return _predicate;
-			};
-
-			this.getPredicateLabel = function() 
-			{
-				return _predicateLabel;
-			};
-
-			this.getObject = function() 
-			{
-				return _object;
-			};
-			this.setObject = function(newObject) 
-			{
-				_object = newObject;
-			};
-
-			// constructor code
-			if (grox.Resource.isResource(subject)) 
-			{
-				_subject = subject;
-			} 
-			if (!_subject) 
-			{
-				var testSubject = grox.resourceStore.getResource(subject);
-				if (testSubject) {_subject = testSubject;}
-			}
-			if (!_subject)
-			{
-				if (typeof subject == 'string')
-				{
-					_subject = grox.resourceStore.addResource(subject,subject);
-				}
-			}
-			if (!_subject) {throw new Error("Invalid subject for new Triple, " + subject + ".");}
-			
-			if (grox.Resource.isResource(predicate)) 
-			{
-				_predicate = predicate;
-			} 
-			if (!_predicate) 
-			{
-				var testPredicate = grox.resourceStore.getResource(predicate);
-				if (testPredicate) {_predicate = testPredicate;}
-			}
-			if (!_predicate)
-			{
-				if (typeof predicate == 'string')
-				{
-					_predicate = grox.resourceStore.addResource(predicate,predicate);
-				}
-			}
-			if (!_predicate) {throw new Error("Invalid predicate for new Triple, " + predicate + ".");}
-
-			if (grox.Resource.isResource(object)) 
-			{
-				_object = object;
-			} 
-			if (!_object) 
-			{
-				var testObject = grox.resourceStore.getResource(object);
-				if (testObject) {_object = testObject;}
-			}
-			if (!_object)
-			{
-				// if object string has one colon, assume the caller wants it to be a new resource
-				if (typeof object == 'string' && object.indexOf(":") >= 0 && object.lastIndexOf(":") == object.indexOf(":"))
-				{
-					_object = grox.resourceStore.addResource(object);
-				}
-			}
-			if (!_object) 
-			{
-				_object = object;
-			}
-			if (!_object) {throw new Error("Invalid object for new Triple, " + object + ".");}
-
-			_predicateLabel = constructPredicateLabel(_predicate,altPredicateLabel);
-
-			_subject.notifyOfParticipationAsSubject(this);
-			_predicate.notifyOfParticipationAsPredicate(this);
-			if (grox.Resource.isResource(_object)) 
-			{
-				_object.notifyOfParticipationAsObject(this);
-			}
-		}
-
-		function constructPredicateLabel(predicate,altPredicateLabel)
-		{
-			let predicateLabel;
-			if(altPredicateLabel != undefined && (typeof altPredicateLabel) == "string") 
-			{
-				predicateLabel = altPredicateLabel;
-			} 
-			else if(grox.Resource.isResource(predicate))
-			{
-				predicateLabel = predicate.getPrefLabel();
-			}
-			return predicateLabel;
-		}
-	}
-)();
-
-grox.Triple.prototype = 
-{
-	display: function() 
-	{
-		let msg  = "subject  " + this.getSubject().getPrefLabel() + "\npredicate  " + this.getPredicate().getPrefLabel()  + "\nobject  ";
-		let testObject = this.getObject();
-		if (grox.Resource.isResource(testObject))
-		{
-			msg = msg + testObject.getPrefLabel();
-		}
-		else
-		{
-			msg = msg + testObject.toString();
-		}
-		console.log(msg);
-	}
-};
-*/
 grox.ResourceStore = 
 (
-	// anonymous function that is called once after the code is parsed, to define the static attributes and methods, and to return the constructor function
+	// anonymous IIFE function that is called once after the code is parsed, to define the static attributes and methods, and to return the constructor function
 	function() 
 	{
-		// the actual (anonymous) constructor function which gets used with "new"
+		// any static attributes would go here
+
+		// the actual constructor function which gets called by new ResourceStore()
 		return function() 
 		{
-			// private attributes, unique to each object instance
+			// private attributes, unique to each ResourceStore object instance
 			let _namespacePrefixes = {};
 			let _resources = {};
 
 			// private methods, unique to each object instance, with access to private attributes and methods
+			// _Resource is an IIFE constructor function which is private to ResourceStore
 			let _Resource = 
 			(
-				function _Resource () 
+				function () 
 				{
 					return function(QName,prefLabel)
 					{
+						// private to each _Resource instance
 						let _QName;
 						let _prefLabel;
 						let _triplesWithThisAsSubject = [];
@@ -306,7 +76,7 @@ grox.ResourceStore =
 							return _triplesWithThisAsObject;
 						};
 			
-						// constructor code
+						// _Resource constructor code
 						if (!QName) {throw new Error("Invalid QName for new Resource, " + QName + ".");}
 						if (typeof QName != "string") {throw new Error("When adding a resource, QName must be a string.");}
 						if (QName.indexOf(":") < 0) {throw new Error("When adding a resource, QName must have a namespace prefix or use ':' in first position to indicate default namespace.");}
@@ -325,13 +95,16 @@ grox.ResourceStore =
 			
 			_Resource.prototype = 
 			{
+				// public, non-privileged methods (one copy for all _Resource objects)
+				// used with "this" to call object-specific methods, but has no access to private attributes or methods
 				display: function() 
 				{
 					console.log("Resource = " + this.getQName());
 				}
 			};
 
-			_Resource.isResource = function(value)
+			// private method for ResourceStore
+			let _isResource = function(value)
 			{
 				if(value == undefined || typeof value != "object") 
 				{
@@ -344,144 +117,8 @@ grox.ResourceStore =
 				return true;
 			}
 
-			function _Triple() 
-			{
-				return function(subject,predicate,object,altPredicateLabel) 
-				{
-					let _subject;
-					let _predicate;
-					let _object;
-					let _predicateLabel;
-		
-					this.getSubject = function() 
-					{
-						return _subject;
-					};
-		
-					this.getPredicate = function() 
-					{
-						return _predicate;
-					};
-		
-					this.getPredicateLabel = function() 
-					{
-						return _predicateLabel;
-					};
-		
-					this.getObject = function() 
-					{
-						return _object;
-					};
-					this.setObject = function(newObject) 
-					{
-						_object = newObject;
-					};
-		
-					// constructor code
-					if (_Resource.isResource(subject)) 
-					{
-						_subject = subject;
-					} 
-					if (!_subject) 
-					{
-						var testSubject = grox.resourceStore.getResource(subject);
-						if (testSubject) {_subject = testSubject;}
-					}
-					if (!_subject)
-					{
-						if (typeof subject == 'string')
-						{
-							_subject = grox.resourceStore.addResource(subject,subject);
-						}
-					}
-					if (!_subject) {throw new Error("Invalid subject for new Triple, " + subject + ".");}
-					
-					if (_Resource.isResource(predicate)) 
-					{
-						_predicate = predicate;
-					} 
-					if (!_predicate) 
-					{
-						var testPredicate = grox.resourceStore.getResource(predicate);
-						if (testPredicate) {_predicate = testPredicate;}
-					}
-					if (!_predicate)
-					{
-						if (typeof predicate == 'string')
-						{
-							_predicate = grox.resourceStore.addResource(predicate,predicate);
-						}
-					}
-					if (!_predicate) {throw new Error("Invalid predicate for new Triple, " + predicate + ".");}
-		
-					if (_Resource.isResource(object)) 
-					{
-						_object = object;
-					} 
-					if (!_object) 
-					{
-						var testObject = grox.resourceStore.getResource(object);
-						if (testObject) {_object = testObject;}
-					}
-					if (!_object)
-					{
-						// if object string has one colon, assume the caller wants it to be a new resource
-						if (typeof object == 'string' && object.indexOf(":") >= 0 && object.lastIndexOf(":") == object.indexOf(":"))
-						{
-							_object = grox.resourceStore.addResource(object);
-						}
-					}
-					if (!_object) 
-					{
-						_object = object;
-					}
-					if (!_object) {throw new Error("Invalid object for new Triple, " + object + ".");}
-		
-					_predicateLabel = constructPredicateLabel(_predicate,altPredicateLabel);
-		
-					_subject.notifyOfParticipationAsSubject(this);
-					_predicate.notifyOfParticipationAsPredicate(this);
-					if (_Resource.isResource(_object)) 
-					{
-						_object.notifyOfParticipationAsObject(this);
-					}
-				}
-		
-				function constructPredicateLabel(predicate,altPredicateLabel)
-				{
-					let predicateLabel;
-					if(altPredicateLabel != undefined && (typeof altPredicateLabel) == "string") 
-					{
-						predicateLabel = altPredicateLabel;
-					} 
-					else if(_Resource.isResource(predicate))
-					{
-						predicateLabel = predicate.getPrefLabel();
-					}
-					return predicateLabel;
-				}
-			}
-			
-			_Triple.prototype = 
-			{
-				display: function() 
-				{
-					let msg  = "subject  " + this.getSubject().getPrefLabel() + "\npredicate  " + this.getPredicate().getPrefLabel()  + "\nobject  ";
-					let testObject = this.getObject();
-					if (_Resource.isResource(testObject))
-					{
-						msg = msg + testObject.getPrefLabel();
-					}
-					else
-					{
-						msg = msg + testObject.toString();
-					}
-					console.log(msg);
-				}
-			};
 
-
-			// privileged methods (public, unique to each object instance, with access to private attributes and methods)
+			// privileged methods (public, unique to each ResourceStore instance, with access to private attributes and methods)
 			this.addResource = function(QName,prefLabel)
 			{
 				let addedResource;
@@ -510,7 +147,7 @@ grox.ResourceStore =
 			this.getResource = function(resourceID)
 			{
 				let resource = _resources[resourceID];
-				if (!resource && _Resource.isResource(resourceID))
+				if (!resource && _isResource(resourceID))
 				{
 					resource = _resources[resourceID.getQName()]
 				}
@@ -522,12 +159,13 @@ grox.ResourceStore =
 				return resource;
 			}
 
-			this.Resource = 
+			this.isResource = function(resourceID)
 			{
-
+				return _isResource(resourceID);
 			}
 
-			// constructor code (run once when the object is instantiated)
+
+			// constructor code for ResourceStore (run once when the object is instantiated)
 			//
 		}
 	}
@@ -539,15 +177,163 @@ grox.ResourceStore.prototype =
 
 grox.TripleStore = 
 (
+	// anonymous IIFE function that is called once after the code is parsed, to define the static attributes and methods, and to return the constructor function
 	function() 
 	{		
+		// any static attributes would go here
+
+		// the actual constructor function which gets called by new TripleStore()
 		return function(namespace) 
 		{
+			// private attributes (unique to each TripleStore instance)
 			let _triples = [];
 
+			// private methods (unique to each TripleStore instance, with access to private attributes and methods)
+			// _Triple is an IIFE constructor function which is private to ResourceStore
+			let _Triple = 
+			(
+				function () 
+				{
+					return function(subject,predicate,object,altPredicateLabel) 
+					{
+						// private to each _Triple instance
+						let _subject;
+						let _predicate;
+						let _object;
+						let _predicateLabel;
+			
+						this.getSubject = function() 
+						{
+							return _subject;
+						};
+			
+						this.getPredicate = function() 
+						{
+							return _predicate;
+						};
+			
+						this.getPredicateLabel = function() 
+						{
+							return _predicateLabel;
+						};
+			
+						this.getObject = function() 
+						{
+							return _object;
+						};
+						this.setObject = function(newObject) 
+						{
+							_object = newObject;
+						};
+			
+						// _Triple constructor code
+						if (grox.resourceStore.isResource(subject))
+						{
+							_subject = subject;
+						} 
+						if (!_subject) 
+						{
+							var testSubject = grox.resourceStore.getResource(subject);
+							if (testSubject) {_subject = testSubject;}
+						}
+						if (!_subject)
+						{
+							if (typeof subject == 'string')
+							{
+								_subject = grox.resourceStore.addResource(subject,subject);
+							}
+						}
+						if (!_subject) {throw new Error("Invalid subject for new Triple, " + subject + ".");}
+						
+						if (grox.resourceStore.isResource(predicate)) 
+						{
+							_predicate = predicate;
+						} 
+						if (!_predicate) 
+						{
+							var testPredicate = grox.resourceStore.getResource(predicate);
+							if (testPredicate) {_predicate = testPredicate;}
+						}
+						if (!_predicate)
+						{
+							if (typeof predicate == 'string')
+							{
+								_predicate = grox.resourceStore.addResource(predicate,predicate);
+							}
+						}
+						if (!_predicate) {throw new Error("Invalid predicate for new Triple, " + predicate + ".");}
+			
+						if (grox.resourceStore.isResource(object)) 
+						{
+							_object = object;
+						} 
+						if (!_object) 
+						{
+							var testObject = grox.resourceStore.getResource(object);
+							if (testObject) {_object = testObject;}
+						}
+						if (!_object)
+						{
+							// if object string has one colon, assume the caller wants it to be a new resource
+							if (typeof object == 'string' && object.indexOf(":") >= 0 && object.lastIndexOf(":") == object.indexOf(":"))
+							{
+								_object = grox.resourceStore.addResource(object);
+							}
+						}
+						if (!_object) 
+						{
+							_object = object;
+						}
+						if (!_object) {throw new Error("Invalid object for new Triple, " + object + ".");}
+			
+						_predicateLabel = _constructPredicateLabel(_predicate,altPredicateLabel);
+			
+						_subject.notifyOfParticipationAsSubject(this);
+						_predicate.notifyOfParticipationAsPredicate(this);
+						if (grox.resourceStore.isResource(_object)) 
+						{
+							_object.notifyOfParticipationAsObject(this);
+						}
+					}
+			
+					function _constructPredicateLabel(predicate,altPredicateLabel)
+					{
+						let predicateLabel;
+						if(altPredicateLabel != undefined && (typeof altPredicateLabel) == "string") 
+						{
+							predicateLabel = altPredicateLabel;
+						} 
+						else if(grox.resourceStore.isResource(predicate))
+						{
+							predicateLabel = predicate.getPrefLabel();
+						}
+						return predicateLabel;
+					}
+				}
+			)();
+			
+			_Triple.prototype = 
+			{
+				display: function() 
+				{
+					let msg  = "subject  " + this.getSubject().getPrefLabel() + "\npredicate  " + this.getPredicate().getPrefLabel()  + "\nobject  ";
+					let testObject = this.getObject();
+					if (grox.resourceStore.isResource(testObject))
+					{
+						msg = msg + testObject.getPrefLabel();
+					}
+					else
+					{
+						msg = msg + testObject.toString();
+					}
+					console.log(msg);
+				}
+			};		
+
+			// keyword "this" defines a privileged method (public, unique to each TripleStore instance, with access to private attributes and methods)
 			this.addTriple = function(subject,predicate,object,altPredicateLabel)
 			{
-				let newTriple = new grox.Triple(subject,predicate,object,altPredicateLabel);
+				let newTriple = new _Triple(subject,predicate,object,altPredicateLabel);
 				_triples.push(newTriple);
 				return newTriple;
 			};
