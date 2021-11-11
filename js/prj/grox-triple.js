@@ -14,7 +14,7 @@ grox.ResourceStore =
 		return function() 
 		{
 			// private attributes, unique to each ResourceStore object instance
-			let _namespacePrefixes = {};
+			let _namespaces = {};
 			let _triples = [];
 			let _resources = {};
 
@@ -262,10 +262,10 @@ grox.ResourceStore =
 			
 			
 			// privileged methods (defined with "this.", public, unique to each ResourceStore instance, with access to private attributes and methods)
-			this.addNamespacePrefix = function(prefix,URI)
+			this.addNamespace = function(prefix,URI)
 			{
 				if (prefix.indexOf(":") >= 0) {throw new Error("When adding a NamespacePrefix, a colon is not allowed in the prefix name.  Specified prefix was " + prefix);}
-				_namespacePrefixes[prefix] = URI;
+				_namespaces[prefix] = URI;
 			}
 
 			this.addTriple = function(subject,predicate,object,altPredicateLabel)
@@ -286,7 +286,7 @@ grox.ResourceStore =
 					if (QName.indexOf(":") != 0)
 					{
 						let prefix = QName.split(":")[0];
-						if (_namespacePrefixes[prefix] == undefined) {throw new Error("When adding a resource, QName must use an existing namespacePrefix.  Specified prefix was " + prefix);}
+						if (_namespaces[prefix] == undefined) {throw new Error("When adding a resource, QName must use an existing namespacePrefix.  Specified prefix was " + prefix);}
 					}
 		
 					_resources[QName] = addedResource;	
