@@ -15,6 +15,7 @@ grox.ResourceStore =
 		{
 			// private attributes, unique to each ResourceStore object instance
 			let _namespacePrefixes = {};
+			let _triples = [];
 			let _resources = {};
 
 			// private methods, unique to each object instance, with access to private attributes and methods
@@ -93,16 +94,6 @@ grox.ResourceStore =
 				}
 			)();
 			
-			_Resource.prototype = 
-			{
-				// public, non-privileged methods (one copy for all _Resource objects)
-				// used with "this" to call object-specific methods, but has no access to private attributes or methods
-				display: function() 
-				{
-					console.log("Resource = " + this.getQName());
-				}
-			};
-
 			// private method for ResourceStore
 			let _isResource = function(value)
 			{
@@ -117,78 +108,6 @@ grox.ResourceStore =
 				return true;
 			}
 
-
-			// privileged methods (public, unique to each ResourceStore instance, with access to private attributes and methods)
-			this.addResource = function(QName,prefLabel)
-			{
-				let addedResource;
-                if (_resources[QName]) {
-					addedResource = _resources[QName];
-				}
-				else {
-					addedResource = new _Resource(QName,prefLabel);
-					if (QName.indexOf(":") != 0)
-					{
-						let prefix = QName.split(":")[0];
-						if (_namespacePrefixes[prefix] == undefined) {throw new Error("When adding a resource, QName must use an existing namespacePrefix.  Specified prefix was " + prefix);}
-					}
-		
-					_resources[QName] = addedResource;	
-				}
-				return addedResource;				
-			};
-			
-			this.addNamespacePrefix = function(prefix,URI)
-			{
-				if (prefix.indexOf(":") >= 0) {throw new Error("When adding a NamespacePrefix, a colon is not allowed in the prefix name.  Specified prefix was " + prefix);}
-				_namespacePrefixes[prefix] = URI;
-			}
-
-			this.getResource = function(resourceID)
-			{
-				let resource = _resources[resourceID];
-				if (!resource && _isResource(resourceID))
-				{
-					resource = _resources[resourceID.getQName()]
-				}
-				let resourceName = "";
-				if (resource)
-				{
-					resourceName = resource.getQName();
-				}
-				return resource;
-			}
-
-			this.isResource = function(resourceID)
-			{
-				return _isResource(resourceID);
-			}
-
-
-			// constructor code for ResourceStore (run once when the object is instantiated)
-			//
-		}
-	}
-)();
-
-grox.ResourceStore.prototype = 
-{
-};
-
-grox.TripleStore = 
-(
-	// anonymous IIFE function that is called once after the code is parsed, to define the static attributes and methods, and to return the constructor function
-	function() 
-	{		
-		// any static attributes would go here
-
-		// the actual constructor function which gets called by new TripleStore()
-		return function(namespace) 
-		{
-			// private attributes (unique to each TripleStore instance)
-			let _triples = [];
-
-			// private methods (unique to each TripleStore instance, with access to private attributes and methods)
 			// _Triple is an IIFE constructor function which is private to ResourceStore
 			let _Triple = 
 			(
@@ -311,7 +230,18 @@ grox.TripleStore =
 					}
 				}
 			)();
-			
+
+			_Resource.prototype = 
+			{
+				// public, non-privileged methods (one copy for all _Resource objects)
+				// used with "this" to call object-specific methods, but has no access to private attributes or methods
+				display: function() 
+				{
+					console.log("Resource = " + this.getQName());
+				}
+			};
+
+						
 			_Triple.prototype = 
 			{
 				display: function() 
@@ -329,23 +259,72 @@ grox.TripleStore =
 					console.log(msg);
 				}
 			};		
+			
+			
+			// privileged methods (defined with "this.", public, unique to each ResourceStore instance, with access to private attributes and methods)
+			this.addNamespacePrefix = function(prefix,URI)
+			{
+				if (prefix.indexOf(":") >= 0) {throw new Error("When adding a NamespacePrefix, a colon is not allowed in the prefix name.  Specified prefix was " + prefix);}
+				_namespacePrefixes[prefix] = URI;
+			}
 
-			// keyword "this" defines a privileged method (public, unique to each TripleStore instance, with access to private attributes and methods)
 			this.addTriple = function(subject,predicate,object,altPredicateLabel)
 			{
 				let newTriple = new _Triple(subject,predicate,object,altPredicateLabel);
 				_triples.push(newTriple);
 				return newTriple;
 			};
+
+			this.addResource = function(QName,prefLabel)
+			{
+				let addedResource;
+                if (_resources[QName]) {
+					addedResource = _resources[QName];
+				}
+				else {
+					addedResource = new _Resource(QName,prefLabel);
+					if (QName.indexOf(":") != 0)
+					{
+						let prefix = QName.split(":")[0];
+						if (_namespacePrefixes[prefix] == undefined) {throw new Error("When adding a resource, QName must use an existing namespacePrefix.  Specified prefix was " + prefix);}
+					}
+		
+					_resources[QName] = addedResource;	
+				}
+				return addedResource;				
+			};
+			
+			this.getResource = function(resourceID)
+			{
+				let resource = _resources[resourceID];
+				if (!resource && _isResource(resourceID))
+				{
+					resource = _resources[resourceID.getQName()]
+				}
+				let resourceName = "";
+				if (resource)
+				{
+					resourceName = resource.getQName();
+				}
+				return resource;
+			}
+
+			this.isResource = function(resourceID)
+			{
+				return _isResource(resourceID);
+			}
+
+
+			// constructor code for ResourceStore (runs once when the object is instantiated with "new")
+			// ------------------------------
 		}
 	}
 )();
 
-grox.TripleStore.prototype = 
+grox.ResourceStore.prototype = 
 {
 };
 
 grox.resourceStore = new grox.ResourceStore();
-grox.tripleStore = new grox.TripleStore();
 
  

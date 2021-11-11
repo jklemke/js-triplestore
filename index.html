@@ -71,7 +71,7 @@
 				s.display();
 				var w = grox.resourceStore.addResource('grox:Wally','Wallace');
 				w.display();
-				var t = grox.tripleStore.addTriple(':Bob','rdf:type',':Father');
+				var t = grox.resourceStore.addTriple(':Bob','rdf:type',':Father');
 				t.display();
 				var b = grox.resourceStore.getResource(':Bob');
 				if (b) {b.display()}
@@ -79,13 +79,13 @@
 				if (b2) {b2.display()}
 				var f = grox.resourceStore.getResource(':Father');
 				if (f) {f.display()}
-				var z = grox.tripleStore.addTriple(':Smurf','skos:related',':Munchkin');
+				var z = grox.resourceStore.addTriple(':Smurf','skos:related',':Munchkin');
 				z.display();
 				var j = grox.resourceStore.addResource(':Jimmy','Jimmy');
 				j.display();
-				var k = grox.tripleStore.addTriple(j,'rdf:type',':Father');
+				var k = grox.resourceStore.addTriple(j,'rdf:type',':Father');
 				k.display();
-				var l = grox.tripleStore.addTriple(w,'rdf:type',f);
+				var l = grox.resourceStore.addTriple(w,'rdf:type',f);
 				l.display();
 			}
 	  	</script>
